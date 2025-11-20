@@ -46,7 +46,6 @@ class DashboardScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Stats Cards Section
             BlocBuilder<DashboardBloc, DashboardState>(
               builder: (context, state) {
                 if (state is DashboardLoading || state is DashboardInitial) {
@@ -108,7 +107,6 @@ class DashboardScreen extends StatelessWidget {
 
             SizedBox(height: 24),
 
-            // Chart Section
             Container(
               width: double.infinity,
               padding: EdgeInsets.all(20),

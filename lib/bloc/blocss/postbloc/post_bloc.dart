@@ -63,7 +63,17 @@ class PostBloc extends Bloc<PostEvent, PostState> {
 
   void _onRefreshPosts(RefreshPosts event, Emitter<PostState> emit) async {
     emit(PostLoading());
+
+    final userPosts = posts.where((post) => post.author == 'You').toList();
+
+    posts.clear();
+
     _generateRandomPosts();
+
+    for (var userPost in userPosts.reversed) {
+      posts.insert(0, userPost);
+    }
+
     await Future.delayed(Duration(milliseconds: 600));
     emit(PostLoaded(posts: List.from(posts)));
   }
@@ -86,7 +96,9 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       "Sarah Wilson",
       "Mike Brown",
     ];
-    posts.clear();
+
+    // Don't remove anything here since we cleared the list already
+
     for (int i = 0; i < 5; i++) {
       posts.add(
         PostModel(

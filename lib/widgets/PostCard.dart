@@ -31,7 +31,6 @@ class PostCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Post header
           Row(
             children: [
               CircleAvatar(
@@ -85,7 +84,6 @@ class PostCard extends StatelessWidget {
 
           SizedBox(height: 12),
 
-          // Post content
           Text(
             post.content,
             style: TextStyle(
@@ -95,7 +93,6 @@ class PostCard extends StatelessWidget {
             ),
           ),
 
-          // Post image (if exists)
           if (post.imagePath != null) ...[
             SizedBox(height: 12),
             ClipRRect(
@@ -126,7 +123,6 @@ class PostCard extends StatelessWidget {
 
           SizedBox(height: 12),
 
-          // Post actions
           Row(
             children: [
               InkWell(

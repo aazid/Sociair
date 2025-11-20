@@ -18,6 +18,12 @@ class PostScreens extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back_ios_new, color: Colors.white),
+        ),
         title: Text(
           'Posts',
           style: TextStyle(
@@ -28,12 +34,12 @@ class PostScreens extends StatelessWidget {
         ),
         backgroundColor: Colors.blue[700],
         elevation: 0.5,
-        actions: [
-          IconButton(
-            onPressed: () => context.read<PostBloc>().add(RefreshPosts()),
-            icon: Icon(Icons.refresh, color: Colors.white),
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     onPressed: () => context.read<PostBloc>().add(RefreshPosts()),
+        //     icon: Icon(Icons.refresh, color: Colors.white),
+        //   ),
+        // ],
       ),
       body: BlocBuilder<PostBloc, PostState>(
         builder: (context, state) {
@@ -104,7 +110,7 @@ class PostScreens extends StatelessWidget {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => CreatePostscreen()),
+            MaterialPageRoute(builder: (context) => CreatePostScreen()),
           );
         },
         backgroundColor: Colors.blue[700],
