@@ -8,6 +8,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   int _calls = 24;
   int _posts = 18;
   double _engagement = 4.8;
+  double _previousEngagement = 4.8; // Add this missing variable
 
   Timer? _ticker;
 
@@ -27,10 +28,15 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   }
 
   void _onSimulate(SimulateUpdate event, Emitter<DashboardState> emit) {
-    _messages += _randBetween(1, 6);
-    _calls += _randBetween(0, 2);
-    _posts += _randBetween(0, 1);
-    _engagement = (_engagement + (_randBetween(1, 4) / 10)).clamp(1.0, 12.0);
+    _previousEngagement = _engagement;
+
+    _messages = (_messages + _randBetween(-5, 5)).clamp(0, 119);
+
+    _calls = (_calls + _randBetween(-3, 3)).clamp(0, 69);
+
+    _posts = (_posts + _randBetween(-2, 2)).clamp(0, 53);
+
+    _engagement = (_engagement + (_randBetween(-5, 5) / 10)).clamp(1.0, 12.0);
     emit(_currentLoaded());
   }
 

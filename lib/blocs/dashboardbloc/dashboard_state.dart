@@ -1,3 +1,5 @@
+import 'package:ludo/blocs/dashboardbloc/dashboard_bloc.dart';
+
 abstract class DashboardState {}
 
 class DashboardInitial extends DashboardState {}

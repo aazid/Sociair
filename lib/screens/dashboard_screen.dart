@@ -7,6 +7,7 @@ import 'package:ludo/blocs/dashboardbloc/dashboard_event.dart';
 import 'package:ludo/blocs/dashboardbloc/dashboard_state.dart';
 import 'package:ludo/widgets/Stat_Card.dart';
 import 'package:ludo/widgets/small_chart.dart';
+import 'package:ludo/screens/post_screens.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -18,20 +19,24 @@ class DashboardScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           "Dashboard",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.blue[700],
         elevation: 0.5,
         actions: [
           IconButton(
             onPressed: () => context.read<DashboardBloc>().add(ManualRefresh()),
-            icon: Icon(Icons.refresh),
+            icon: Icon(Icons.refresh, color: Colors.white),
           ),
           TextButton.icon(
             onPressed: () => context.read<AuthBloc>().add(LogoutRequested()),
-            icon: Icon(Icons.logout, size: 16),
-            label: Text('Logout'),
-            style: TextButton.styleFrom(foregroundColor: Colors.red[600]),
+            icon: Icon(Icons.logout, size: 16, color: Colors.white),
+            label: Text('Logout', style: TextStyle(color: Colors.white)),
+            style: TextButton.styleFrom(foregroundColor: Colors.white),
           ),
           SizedBox(width: 8),
         ],
@@ -47,7 +52,9 @@ class DashboardScreen extends StatelessWidget {
                 if (state is DashboardLoading || state is DashboardInitial) {
                   return Container(
                     height: 120,
-                    child: Center(child: CircularProgressIndicator()),
+                    child: Center(
+                      child: CircularProgressIndicator(color: Colors.blue[700]),
+                    ),
                   );
                 }
                 if (state is DashboardLoaded) {
@@ -74,12 +81,22 @@ class DashboardScreen extends StatelessWidget {
                       ),
                       SizedBox(width: 12),
                       Expanded(
-                        child: StatCard(
-                          color: Colors.orange,
-                          icon: Icons.post_add,
-                          subtitle: 'Total',
-                          title: 'Posts',
-                          value: state.totalPosts.toString(),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PostScreens(),
+                              ),
+                            );
+                          },
+                          child: StatCard(
+                            color: Colors.orange,
+                            icon: Icons.post_add,
+                            subtitle: 'Tap to view',
+                            title: 'Posts',
+                            value: state.totalPosts.toString(),
+                          ),
                         ),
                       ),
                     ],
@@ -117,6 +134,7 @@ class DashboardScreen extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
+                          color: Colors.grey[800],
                         ),
                       ),
                       BlocBuilder<DashboardBloc, DashboardState>(
@@ -129,7 +147,7 @@ class DashboardScreen extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
-                              color: Colors.blue,
+                              color: Colors.blue[700],
                             ),
                           );
                         },
@@ -152,7 +170,7 @@ class DashboardScreen extends StatelessWidget {
                           ),
                           child: Text('Simulate Update'),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
+                            backgroundColor: Colors.green[600],
                             foregroundColor: Colors.white,
                             elevation: 0,
                             padding: EdgeInsets.symmetric(vertical: 12),
@@ -168,8 +186,12 @@ class DashboardScreen extends StatelessWidget {
                           onPressed: () => context.read<DashboardBloc>().add(
                             ManualRefresh(),
                           ),
-                          child: Text('Refresh'),
+                          child: Text(
+                            'Refresh',
+                            style: TextStyle(color: Colors.blue[700]),
+                          ),
                           style: OutlinedButton.styleFrom(
+                            side: BorderSide(color: Colors.blue[700]!),
                             padding: EdgeInsets.symmetric(vertical: 12),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
