@@ -5,8 +5,17 @@ class LoadPost extends PostEvent {}
 class CreatePost extends PostEvent {
   final String content;
   final String? imagePath;
+  final String? locationName;
+  final double? latitude;
+  final double? longitude;
 
-  CreatePost({required this.content, required this.imagePath});
+  CreatePost({
+    required this.content,
+    this.imagePath,
+    this.locationName,
+    this.latitude,
+    this.longitude,
+  });
 }
 
 class DeletePost extends PostEvent {

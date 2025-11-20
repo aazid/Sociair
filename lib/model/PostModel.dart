@@ -6,15 +6,21 @@ class PostModel {
   final int likes;
   final bool isLiked;
   final String author;
+  final String? locationName;
+  final double? latitude;
+  final double? longitude;
 
   PostModel({
     required this.author,
     required this.content,
     required this.createdAt,
     required this.id,
-    required this.imagePath,
+    this.imagePath,
     required this.isLiked,
     required this.likes,
+    this.latitude,
+    this.locationName,
+    this.longitude,
   });
 
   PostModel copyWith({
@@ -25,6 +31,9 @@ class PostModel {
     String? author,
     int? likes,
     bool? isLiked,
+    String? locationName,
+    double? latitude,
+    double? longitude,
   }) {
     return PostModel(
       author: author ?? this.author,
@@ -34,8 +43,9 @@ class PostModel {
       imagePath: imagePath ?? this.imagePath,
       isLiked: isLiked ?? this.isLiked,
       likes: likes ?? this.likes,
+      locationName: locationName ?? this.locationName,
+      longitude: longitude ?? this.longitude,
+      latitude: latitude ?? this.latitude,
     );
   }
-
-  void operator []=(int other, PostModel value) {}
 }

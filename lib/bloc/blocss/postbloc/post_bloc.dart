@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ludo/bloc/blocss/postbloc/post_event.dart';
 import 'package:ludo/bloc/blocss/postbloc/post_state.dart';
@@ -37,6 +36,9 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       imagePath: event.imagePath,
       isLiked: false,
       likes: 0,
+      locationName: event.locationName,
+      latitude: event.latitude,
+      longitude: event.longitude,
     );
     posts.insert(0, newPost);
 
@@ -50,10 +52,10 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   }
 
   void _onLikePost(LikePost event, Emitter<PostState> emit) async {
-    final postIndex = posts.indexWhere((posts) => posts.id == event.postId);
+    final postIndex = posts.indexWhere((post) => post.id == event.postId);
     if (postIndex != -1) {
       final post = posts[postIndex];
-      post[postIndex] = post.copyWith(
+      posts[postIndex] = post.copyWith(
         isLiked: !post.isLiked,
         likes: post.isLiked ? post.likes - 1 : post.likes + 1,
       );

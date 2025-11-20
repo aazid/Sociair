@@ -93,6 +93,27 @@ class PostCard extends StatelessWidget {
             ),
           ),
 
+          // Location display
+          if (post.locationName != null) ...[
+            SizedBox(height: 8),
+            Row(
+              children: [
+                Icon(Icons.location_on, color: Colors.grey[600], size: 16),
+                SizedBox(width: 4),
+                Expanded(
+                  child: Text(
+                    post.locationName!,
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                      fontSize: 12,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+
           if (post.imagePath != null) ...[
             SizedBox(height: 12),
             ClipRRect(

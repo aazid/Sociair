@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:ludo/bloc/blocss/postbloc/post_bloc.dart';
-import 'package:ludo/bloc/blocss/postbloc/post_event.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 import 'dart:io';
+import '../bloc/blocss/postbloc/post_bloc.dart';
+import '../bloc/blocss/postbloc/post_event.dart';
 
 class CreatePostScreen extends StatefulWidget {
   @override
@@ -15,6 +17,12 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   File? _selectedImage;
   final ImagePicker _picker = ImagePicker();
   bool _isPosting = false;
+
+  // Location variables
+  String? _selectedLocation;
+  double? _latitude;
+  double? _longitude;
+  bool _isLoadingLocation = false;
 
   @override
   Widget build(BuildContext context) {
@@ -156,6 +164,47 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                     SizedBox(height: 16),
                   ],
 
+                  // Location preview
+                  if (_selectedLocation != null) ...[
+                    Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.blue[50],
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.blue[200]!),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.location_on,
+                            color: Colors.blue[700],
+                            size: 20,
+                          ),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              _selectedLocation!,
+                              style: TextStyle(
+                                color: Colors.blue[700],
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: _clearLocation,
+                            child: Icon(
+                              Icons.close,
+                              color: Colors.blue[700],
+                              size: 20,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                  ],
+
                   // Action buttons
                   Container(
                     padding: EdgeInsets.all(16),
@@ -199,19 +248,12 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                             ),
                             SizedBox(width: 12),
                             _buildActionButton(
-                              icon: Icons.location_on,
+                              icon: _isLoadingLocation
+                                  ? Icons.hourglass_empty
+                                  : Icons.location_on,
                               label: 'Location',
                               color: Colors.red,
-                              onTap: () {
-                                // Add location functionality
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      'Location feature coming soon!',
-                                    ),
-                                  ),
-                                );
-                              },
+                              onTap: _isLoadingLocation ? null : _getLocation,
                             ),
                           ],
                         ),
@@ -231,7 +273,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     required IconData icon,
     required String label,
     required Color color,
-    required VoidCallback onTap,
+    VoidCallback? onTap,
   }) {
     return Expanded(
       child: GestureDetector(
@@ -282,6 +324,115 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     }
   }
 
+  Future<void> _getLocation() async {
+    setState(() {
+      _isLoadingLocation = true;
+    });
+
+    try {
+      // Check if location services are enabled
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        _showLocationError(
+          'Location services are disabled. Please enable location services.',
+        );
+        return;
+      }
+
+      // Check location permission
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          _showLocationError('Location permission denied.');
+          return;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        _showLocationError(
+          'Location permissions are permanently denied. Please enable in settings.',
+        );
+        return;
+      }
+
+      // Get current position
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      // Convert coordinates to address
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+
+      if (placemarks.isNotEmpty) {
+        Placemark place = placemarks[0];
+        String address = '';
+
+        if (place.locality != null && place.locality!.isNotEmpty) {
+          address += place.locality!;
+        }
+        if (place.administrativeArea != null &&
+            place.administrativeArea!.isNotEmpty) {
+          if (address.isNotEmpty) address += ', ';
+          address += place.administrativeArea!;
+        }
+        if (place.country != null && place.country!.isNotEmpty) {
+          if (address.isNotEmpty) address += ', ';
+          address += place.country!;
+        }
+
+        if (address.isEmpty) {
+          address =
+              '${position.latitude.toStringAsFixed(6)}, ${position.longitude.toStringAsFixed(6)}';
+        }
+
+        setState(() {
+          _selectedLocation = address;
+          _latitude = position.latitude;
+          _longitude = position.longitude;
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Location added: $address'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      _showLocationError('Error getting location: $e');
+    } finally {
+      setState(() {
+        _isLoadingLocation = false;
+      });
+    }
+  }
+
+  void _showLocationError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+        action: SnackBarAction(
+          label: 'Settings',
+          textColor: Colors.white,
+          onPressed: () => Geolocator.openAppSettings(),
+        ),
+      ),
+    );
+  }
+
+  void _clearLocation() {
+    setState(() {
+      _selectedLocation = null;
+      _latitude = null;
+      _longitude = null;
+    });
+  }
+
   void _createPost() {
     if (_contentController.text.trim().isEmpty) {
       ScaffoldMessenger.of(
@@ -298,10 +449,12 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       CreatePost(
         content: _contentController.text.trim(),
         imagePath: _selectedImage?.path,
+        locationName: _selectedLocation,
+        latitude: _latitude,
+        longitude: _longitude,
       ),
     );
 
-    // Delay to show loading state
     Future.delayed(Duration(milliseconds: 500), () {
       if (mounted) {
         Navigator.pop(context);
