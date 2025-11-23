@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ludo/bloc/authbloc/auth_bloc.dart';
 import 'package:ludo/bloc/authbloc/auth_event.dart';
 import 'package:ludo/bloc/authbloc/auth_state.dart';
+import 'package:ludo/screens/dashboard_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({super.key});
@@ -66,6 +67,12 @@ class _LoginScreenState extends State<LoginScreen>
                       content: Text(state.message),
                       backgroundColor: Colors.redAccent,
                     ),
+                  );
+                }
+                if (state is AuthLoaded) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => DashboardScreen()),
                   );
                 }
               },

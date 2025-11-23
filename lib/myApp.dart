@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ludo/bloc/authbloc/auth_bloc.dart';
 import 'package:ludo/bloc/authbloc/auth_state.dart';
+import 'package:ludo/screens/splash_screen.dart';
 
 import 'screens/login_screen.dart';
 import 'screens/dashboard_screen.dart';
@@ -30,8 +31,8 @@ class MyApp extends StatelessWidget {
         theme: theme,
         home: BlocBuilder<AuthBloc, AuthState>(
           builder: (context, state) {
-            if (state is AuthLoaded) return DashboardScreen();
-            return LoginScreen();
+            if (state is AuthLoaded) return LoginScreen();
+            return SplashScreen();
           },
         ),
       ),
