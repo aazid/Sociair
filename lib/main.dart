@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ludo/bloc/authbloc/auth_bloc.dart';
 import 'package:ludo/bloc/blocss/postbloc/post_bloc.dart';
 import 'package:ludo/bloc/blocss/postbloc/post_event.dart';
+import 'package:ludo/bloc/callbloc/call_bloc.dart';
+import 'package:ludo/bloc/callbloc/call_event.dart';
 import 'package:ludo/blocs/dashboardbloc/dashboard_bloc.dart';
 import 'package:ludo/blocs/dashboardbloc/dashboard_event.dart';
 import 'package:ludo/myApp.dart';
@@ -14,6 +16,7 @@ void main() {
         BlocProvider(create: (_) => AuthBloc()),
         BlocProvider(create: (_) => DashboardBloc()..add(LoadDashboardData())),
         BlocProvider(create: (_) => PostBloc()..add(LoadPost())),
+        BlocProvider(create: (_) => CallBloc()..add(LoadCallHistory())),
       ],
       child: MyApp(),
     ),

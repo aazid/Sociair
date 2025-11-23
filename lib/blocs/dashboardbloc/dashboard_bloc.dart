@@ -8,7 +8,9 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   int _calls = 24;
   int _posts = 18;
   double _engagement = 4.8;
-  double _previousEngagement = 4.8; // Add this missing variable
+  
+  
+  double _previousEngagement = 4.8; 
 
   Timer? _ticker;
 

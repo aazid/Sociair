@@ -99,8 +99,6 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       "Mike Brown",
     ];
 
-    // Don't remove anything here since we cleared the list already
-
     for (int i = 0; i < 5; i++) {
       posts.add(
         PostModel(

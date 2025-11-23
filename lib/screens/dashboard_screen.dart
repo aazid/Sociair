@@ -5,6 +5,7 @@ import 'package:ludo/bloc/authbloc/auth_event.dart';
 import 'package:ludo/blocs/dashboardbloc/dashboard_bloc.dart';
 import 'package:ludo/blocs/dashboardbloc/dashboard_event.dart';
 import 'package:ludo/blocs/dashboardbloc/dashboard_state.dart';
+import 'package:ludo/screens/Callscreen.dart';
 import 'package:ludo/widgets/Stat_Card.dart';
 import 'package:ludo/widgets/small_chart.dart';
 import 'package:ludo/screens/post_screens.dart';
@@ -70,12 +71,22 @@ class DashboardScreen extends StatelessWidget {
                       ),
                       SizedBox(width: 12),
                       Expanded(
-                        child: StatCard(
-                          color: Colors.green,
-                          icon: Icons.call,
-                          subtitle: 'Total',
-                          title: 'Calls',
-                          value: state.totalCalls.toString(),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CallScreen(),
+                              ),
+                            );
+                          },
+                          child: StatCard(
+                            color: Colors.green,
+                            icon: Icons.call,
+                            subtitle: 'Total',
+                            title: 'Calls',
+                            value: state.totalCalls.toString(),
+                          ),
                         ),
                       ),
                       SizedBox(width: 12),
