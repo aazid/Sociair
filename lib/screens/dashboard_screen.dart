@@ -8,6 +8,9 @@ import 'package:ludo/blocs/dashboardbloc/dashboard_event.dart';
 import 'package:ludo/blocs/dashboardbloc/dashboard_state.dart';
 import 'package:ludo/screens/Callscreen.dart';
 import 'package:ludo/screens/login_screen.dart';
+import 'package:ludo/screens/messages_screen.dart';
+import 'package:ludo/bloc/messagebloc/message_bloc.dart';
+import 'package:ludo/bloc/messagebloc/message_event.dart';
 import 'package:ludo/widgets/Stat_Card.dart';
 import 'package:ludo/widgets/small_chart.dart';
 import 'package:ludo/screens/post_screens.dart';
@@ -76,12 +79,26 @@ class DashboardScreen extends StatelessWidget {
                     return Row(
                       children: [
                         Expanded(
-                          child: StatCard(
-                            title: 'Messages',
-                            value: state.totalMessages.toString(),
-                            subtitle: 'Total',
-                            icon: Icons.message,
-                            color: Colors.blue,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BlocProvider(
+                                    create: (context) =>
+                                        MessageBloc()..add(LoadMessages()),
+                                    child: MessagesScreen(),
+                                  ),
+                                ),
+                              );
+                            },
+                            child: StatCard(
+                              title: 'Messages',
+                              value: state.totalMessages.toString(),
+                              subtitle: 'Total',
+                              icon: Icons.message,
+                              color: Colors.blue,
+                            ),
                           ),
                         ),
                         SizedBox(width: 12),
